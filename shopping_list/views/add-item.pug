@@ -1,0 +1,9 @@
+extends index
+
+block content
+	form(action="/items" method="POST")
+		label Item:
+		input(type="text" name="item")
+		label Price:
+		input(type="text" name="price")
+		input(type="submit" value="Add item")
