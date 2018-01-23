@@ -1,0 +1,11 @@
+extends index
+
+block content
+	h2 Shopping List
+		ul
+			each item in items
+				li #{item.name} #{item.price}
+					a(href=`/items/${item.id}/edit`) Edit
+			
+		form(action="/items/new")
+			input(type="submit" value="Add item")
