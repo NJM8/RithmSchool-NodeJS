@@ -9,3 +9,7 @@ block content
 			
 		form(action="/items/new")
 			input(type="submit" value="Add item")
+		form(action="/items/search")
+			input(type="submit" value="Search for an item")
+		form(action="/items/?_method=DELETE" method="POST")
+			input(type="submit" value="Delete all items")

@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-const items = [];
-let id = 1;
+let items = [];
+let id = 0;
 
 router
 	.route('')
@@ -12,16 +12,34 @@ router
 	})
 	.post((req, res, next) => {
 		items.push({
-			name: req.body.item,
+			name: req.body.name,
 			price: req.body.price, 
 			id: ++id
 		});
+		return res.redirect('/items');
+	})
+	.delete((req, res, next) => {
+		items = [];
 		return res.redirect('/items');
 	})
 
 router.route('/new').get((req, res, next) => {
 	return res.render('add-item');
 });
+
+router
+	.route('/search')
+	.get((req, res, next) => {
+		res.render('search');
+	})
+	.post((req, res, next) => {
+		const item = items.find(val => val.name === req.body.name);
+		if (item) {
+			return res.redirect(`/items/${item.id}/edit`);
+		} else {
+			return res.redirect('/items');
+		}
+	});
 
 router
 	.route('/:id')
@@ -31,7 +49,7 @@ router
 	})
 	.patch((req, res, next) => {
 		const item = items.find(val => val.id === Number(req.params.id));
-		item.name = req.body.item;
+		item.name = req.body.name;
 		item.price = req.body.price;
 		return res.redirect('/items');
 	})

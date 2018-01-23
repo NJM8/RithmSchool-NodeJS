@@ -1,0 +1,7 @@
+extends index
+
+block content
+	form(action="/items/search" method="POST")
+		label Item:
+		input(type="text" name="name")
+		input(type="submit" value="Search")

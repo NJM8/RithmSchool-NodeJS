@@ -3,7 +3,7 @@ extends index
 block content
 	form(action=`/items/${item.id}?_method=PATCH` method="POST")
 		label Item:
-		input(type="text" name="item" value=`${item.name}`)
+		input(type="text" name="name" value=`${item.name}`)
 		label Price:
 		input(type="text" name="price" value=`${item.price}`)
 		input(type="submit" value="Edit item")
