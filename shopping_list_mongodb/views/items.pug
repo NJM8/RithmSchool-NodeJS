@@ -1,0 +1,15 @@
+extends index
+
+block content
+	h2 Shopping List
+		ul
+			each item in items
+				li Item: #{item.name} Quantity: #{item.quantity}  
+					a(href=`/items/${item.id}/edit`) Edit
+			
+		form(action="/items/new")
+			input(type="submit" value="Add item")
+		form(action="/items/search")
+			input(type="submit" value="Search for an item")
+		form(action="/items/?_method=DELETE" method="POST")
+			input(type="submit" value="Delete all items")
