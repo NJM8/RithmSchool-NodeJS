@@ -1,6 +1,14 @@
 const express = require('express');
 const { Pet } = require('../models');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
+
+// GET   /owners/:ownerId/pets   Display all pets for an owner
+// GET   /owners/:ownerId/pets/new   Display a form for creating a new pet for an owner
+// GET   /owners/:ownerId/pets/:petId  Display a single pet for an owner
+// GET   /owners/:ownerId/pets/:petId/edit   Display a form for editing an owner's pet
+// POST  /owners/:ownerId/pets   Create a pet for an owner when a form is submitted
+// PATCH   /owners/:ownerId/pets/:petId  Edit an owner's pet when a form is submitted
+// DELETE  /owners/:ownerId/pets/:petId  Delete an owner's pet when a form is submitted
 
 
 router

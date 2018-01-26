@@ -3,6 +3,7 @@ const express = require('express');
 const methodOverride = require('method-override');
 
 const { petRouter } = require('./routes');
+const { ownerRouter } = require('./routes');
 
 const app = express();
 
@@ -11,10 +12,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 
-app.use('/pets', petRouter);
+//app.use('/owners/:ownerID/pets', petRouter);
+app.use('/owners', ownerRouter);
 
 app.get('/', (req, res, next) => {
-  return res.redirect('/pets');
+  return res.redirect('/owners');
 });
 
 app.use((req, res, next) => {
@@ -25,7 +27,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  return res.render('error', {
+  return res.render('owners/error', {
     message: err.message,
     error: app.get('env') === 'development' ? err : {}
   });

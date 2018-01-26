@@ -1,0 +1,12 @@
+extends base
+
+block content
+  h1 Welcome to Pets Tracking App
+  h4 Current Owners:
+  each owner in owners
+    p #{owner.name}
+    form(action=`/owners/${owner.id}`)
+      input(type="submit" value="See Owner Page")
+
+  form(action="/owners/new")
+    input(type="submit" value="Add a new owner")

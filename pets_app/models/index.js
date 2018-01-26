@@ -9,5 +9,5 @@ mongoose
   .catch(err => console.log('Error: ' + err))
 
 
-exports.Pet = require('./pet');
-exports.Owner = require('./owner');
+module.exports.Pet = require('./pet');
+module.exports.Owner = require('./owner');

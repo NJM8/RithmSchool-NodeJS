@@ -5,6 +5,8 @@ const ownerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Pet'
   }]
-});
+},
+  { timestamps:true }
+);
 
 module.exports = mongoose.model('Owner', ownerSchema);
