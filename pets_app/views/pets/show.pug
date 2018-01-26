@@ -2,3 +2,10 @@ extends base
 
 block content
   h1 Welcome to `${pet.name}'s show page!`
+  h3 My owner is `${owner.name} and I am a ${pet.species}
+
+  form(action=`/owners/${owner.id}/pets/${pet.id}/edit`)
+      input(type="submit" value="Edit")
+
+  form(action=`/owners/${owner.id}`)
+    input(type="submit" value=`Back to ${owner.name}'s page`)

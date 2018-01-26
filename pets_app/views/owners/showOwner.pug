@@ -1,8 +1,11 @@
 extends base
 
 block content
-  p #{owner.name}
+  p #{owner.name}'s page
   form(action=`/owners/${owner.id}/edit`)
       input(type="submit" value="Edit")
   form(action=`/owners/${owner.id}/pets`)
       input(type="submit" value="See Pets")
+
+  form(action="/owners")
+    input(type="submit" value="Back to main page")

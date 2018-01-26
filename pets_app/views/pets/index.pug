@@ -1,7 +1,10 @@
 extends base
 
 block content
-  a(href="/pets/new") Create a new pet
   each pet in pets
-    p Name: #{pet.name} 
-     a(href=`/pets/${pet.id}/edit`) Edit
+    p Name: #{pet.name} Kind of pet: #{pet.species}
+    form(action=`/owners/${owner.id}/pets/${pet.id}`)
+       input(type="submit" value=`See ${pet.name}'s Page`)
+
+  form(action=`/owners/${owner.id}/pets/new`) 
+    input(type="submit" value="Create a new pet")

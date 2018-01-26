@@ -1,18 +1,16 @@
-const bodyParser = require('body-parser');
 const express = require('express');
+const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-
-const { petRouter } = require('./routes');
-const { ownerRouter } = require('./routes');
-
 const app = express();
 
 app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+const petRouter = require('./routes/pets');
+const ownerRouter = require('./routes/owners');
 
-//app.use('/owners/:ownerID/pets', petRouter);
+app.use('/pets', petRouter);
 app.use('/owners', ownerRouter);
 
 app.get('/', (req, res, next) => {

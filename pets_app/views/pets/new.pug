@@ -2,6 +2,9 @@ extends base
 
 block content
   h1 Add a new pet!
-  form(action="/pets" method="POST")
+  form(action=`/owners/${owner.id}/pets` method="POST")
+    label Name: 
     input(type="text" name="name")
+    label Kind of pet:
+    input(type="text" name="species")
     input(type="submit" value="Submit")

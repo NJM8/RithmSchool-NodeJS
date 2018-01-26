@@ -1,6 +1,6 @@
 const express = require('express');
-const { Pet } = require('../models');
 const router = express.Router({mergeParams: true});
+const { Pet } = require('../models');
 
 // GET   /owners/:ownerId/pets   Display all pets for an owner
 // GET   /owners/:ownerId/pets/new   Display a form for creating a new pet for an owner
@@ -10,15 +10,14 @@ const router = express.Router({mergeParams: true});
 // PATCH   /owners/:ownerId/pets/:petId  Edit an owner's pet when a form is submitted
 // DELETE  /owners/:ownerId/pets/:petId  Delete an owner's pet when a form is submitted
 
-
 router
-  .route('')
+  .route('/owners/:id/pets')
   .get((req, res, next) => {
-    return Pet.find().then(pets => {
-      return res.render('index', { pets });
-    }).catch(err => {
-      return next(err);
-    });
+    return Owner.findById(req.params.id).populate('pets').exec().then(owner => {
+          return res.render('pets/index', { owner });
+        }).catch(err => {
+          return next(err);
+        });
   })
   .post((req, res, next) => {
     return Pet.create(req.body).then(pet => {
@@ -31,14 +30,14 @@ router
 router
   .route('/new')
   .get((req, res, next) => {
-    return res.render('new');
+    return res.render('pets/new');
   });
 
 router
   .route('/:id')
   .get((req, res, next) => {
     return Pet.findById(req.params.id).then(pet => {
-      return res.render('show', { pet });
+      return res.render('pets/show', { pet });
     }).catch(err => {
       return next(err);
     });
@@ -63,7 +62,7 @@ router
   .route('/:id/edit')
   .get((req, res, next) => {
     return Pet.findById(req.params.id).then(pet => {
-      return res.render('edit', { pet });
+      return res.render('pets/edit', { pet });
     }).catch(err => {
       return next(err);
     });

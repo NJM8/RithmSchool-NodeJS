@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 mongoose
   .connect('mongodb://localhost/pets_app')
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log('Error: ' + err))
+  .catch(err => console.log('Error: ' + err));
 
 
 module.exports.Pet = require('./pet');
