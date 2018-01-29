@@ -1,7 +1,7 @@
 extends base
 
 block content
-  h1 Add a new pet!
+  h3 Give #{owner.name} a new pet!
   form(action=`/owners/${owner.id}/pets` method="POST")
     label Name: 
     input(type="text" name="name")

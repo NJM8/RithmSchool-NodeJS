@@ -1,11 +1,9 @@
 extends base
 
 block content
-  form(action=`owners/${owner.id}/pets/${pet.id}?_method=PATCH` method='POST')
+  form(action=`/owners/${pet.owner.id}/pets/${pet.id}?_method=PATCH` method='POST')
     label Name:
     input(type="text" name="name" value=`${pet.name}`)
     label Kind of pet:
     input(type="text" name="species" value=`${pet.species}`)
     input(type="submit" value="Edit pet")
-  form(action=`/pets/${pet.id}?_method=DELETE` method="POST")
-    input(type="submit" value="Delete pet")

@@ -10,7 +10,7 @@ app.use(methodOverride('_method'));
 const petRouter = require('./routes/pets');
 const ownerRouter = require('./routes/owners');
 
-app.use('/pets', petRouter);
+app.use('/owners/:owner_id/pets', petRouter);
 app.use('/owners', ownerRouter);
 
 app.get('/', (req, res, next) => {
@@ -18,8 +18,8 @@ app.get('/', (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  const error = new Error('Not Found');
-  error.status = 404;
+  const err = new Error('Not Found');
+  err.status = 404;
   return next(err);
 });
 

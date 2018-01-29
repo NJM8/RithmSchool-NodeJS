@@ -1,11 +1,13 @@
 extends base
 
 block content
-  h1 Welcome to `${pet.name}'s show page!`
-  h3 My owner is `${owner.name} and I am a ${pet.species}
+  h2 Welcome to #{pet.name}'s show page!
+  h4 My owner is #{pet.owner.name} and I am a #{pet.species}
 
-  form(action=`/owners/${owner.id}/pets/${pet.id}/edit`)
+  form(action=`/owners/${pet.owner.id}/pets/${pet.id}/edit`)
       input(type="submit" value="Edit")
+  form(action=`/owners/${pet.owner.id}/pets/${pet.id}?_method=DELETE` method="POST")
+    input(type="submit" value="Delete pet")
 
-  form(action=`/owners/${owner.id}`)
-    input(type="submit" value=`Back to ${owner.name}'s page`)
+  form(action=`/owners/${pet.owner.id}/pets`)
+    input(type="submit" value=`Back to ${pet.owner.name}'s pets page`)

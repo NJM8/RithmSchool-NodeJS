@@ -1,18 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { Owner } = require('../models');
+const db = require('../models');
+
+
 
 router
   .route('')
+  // GET   /owners   List all owners
   .get((req, res, next) => {
-    return Owner.find().then(owners => {
+    return db.Owner.find().then(owners => {
       return res.render('owners/index', { owners });
     }).catch(err => {
       return next(err);
     });
   })
+  // POST  /owners   Create an owner when a form is submitted
   .post((req, res, next) => {
-    return Owner.create(req.body).then(owner => {
+    return db.Owner.create(req.body).then(owner => {
       return res.redirect('/');
     }).catch(err => {
       return next(err);
@@ -21,22 +25,25 @@ router
 
 router
   .route('/new')
+  // GET   /owners/new   Display a form for creating a new owner
   .get((req, res, next) => {
     return res.render('owners/newOwner');
   });
 
 router
-  .route('/:id')
+  .route('/:owner_id')
+  // GET   /owners/:id   Display a single owner
   .get((req, res, next) => {
-    return Owner.findById(req.params.id).then(owner => {
+    return db.Owner.findById(req.params.owner_id).then(owner => {
       return res.render('owners/showOwner', { owner });
     }).catch(err => {
       return next(err);
     });
   })
+  // PATCH   /owners/:id   Edit an owner when a form is submitted
   .patch((req, res, next) => {
-    return Owner.findByIdAndUpdate(req.params.id, { $set: {name: req.body.name}}).then(owner => {
-      return Owner.findById(req.params.id).then(owner => {
+    return db.Owner.findByIdAndUpdate(req.params.owner_id, { $set: {name: req.body.name}}).then(owner => {
+      return db.Owner.findById(req.params.owner_id).then(owner => {
         return res.render('owners/showOwner', { owner });
       }).catch(err => {
         return next(err);
@@ -45,18 +52,26 @@ router
       return next(err);
     })
   })
+  // DELETE  /owners/:id   Delete an owner when a form is submitted
   .delete((req, res, next) => {
-    return Owner.findByIdAndRemove(req.params.id).then(owner => {
-      return res.redirect('/');
-    }).catch(err => {
+    return db.Owner.findByIdAndRemove(req.params.owner_id).populate('pets').exec().then(owner => {
+      // Be sure to remove all pets from DB owned by owner
+      owner.pets.forEach(pet => {
+        db.Pet.findByIdAndRemove(pet.id).catch(err => {
+          return next(err);
+        });
+      });        
+      return res.redirect('/'); 
+      }).catch(err => {
       return next(err);
     });
-  })
+  });
 
 router
-  .route('/:id/edit')
+  .route('/:owner_id/edit')
+  // GET   /owners/:id/edit  Display a form for editing a owner
   .get((req, res, next) => {
-    return Owner.findById(req.params.id).then(owner => {
+    return db.Owner.findById(req.params.owner_id).then(owner => {
       return res.render('owners/editOwner', { owner });
     }).catch(err => {
       return next(err);

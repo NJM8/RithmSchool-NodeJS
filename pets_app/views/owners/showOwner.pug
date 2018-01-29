@@ -1,11 +1,15 @@
 extends base
 
 block content
-  p #{owner.name}'s page
-  form(action=`/owners/${owner.id}/edit`)
-      input(type="submit" value="Edit")
+  h2 #{owner.name}'s page
   form(action=`/owners/${owner.id}/pets`)
       input(type="submit" value="See Pets")
+
+  form(action=`/owners/${owner.id}/edit`)
+      input(type="submit" value="Edit")
+        
+  form(action=`/owners/${owner.id}?_method=DELETE` method="POST")
+    input(type="submit" value="Delete an owner")
 
   form(action="/owners")
     input(type="submit" value="Back to main page")
