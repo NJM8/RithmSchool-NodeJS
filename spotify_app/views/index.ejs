@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <title>Spotify Search App</title>
+</head>
+<body>
+  <% if (message) { %>
+    <h3><%= message %></h3>
+  <% } %>
+  <h2>Welcome to a simple spotify search app.</h2>
+  <h3>Sign up below then sign in to spotify to start searching!</h3>
+  <form action="/users/signup">
+    <input type="submit" value="Sign up">
+  </form>
+  <form action="/users/login">
+    <input type="submit" value="Log in">
+  </form>
+</body>
+</html>

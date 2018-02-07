@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <title>Spotify Search App</title>
+</head>
+<body>
+  <% if (message) { %>
+    <h3><%= message %></h3>
+  <% } %>
+  <h2>Welcome <%= user.username %></h2>
+  <form action="get spotified">
+    <input type="submit" value="Log in to Spotify">
+  </form>
+  <% if (user.spotifyAuthenticated) { %>
+    <% include ./partials/search %>
+  <% } %>
+  <form action="/users/logout">
+    <input type="submit" value="Log out">
+  </form>
+</body>
+</html>
