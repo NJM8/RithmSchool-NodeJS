@@ -4,25 +4,16 @@ const db = require("../models");
 const authMiddleware = require("../middleware/auth")
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy;
+const SpotifyStrategy = require('passport-spotify').Strategy;
 
-passport.use(new LocalStrategy(
-    // the first parameter is an optional object with options
-{
-    // when using the local strategy you MUST name your keys usernameField and passwordField. By default they will have values of "username" and "password", but if you are using something like an email instead of a username or have different name attribute values in your form, modifying the optional object is essential for authentication to work.
+passport.use(new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
-    // by default this option is set to false, but when specified to true, the first parameter of the verify callback will be the request object. This is quite useful if you want to see if your application has multiple strategies and you want to see if a user is already logged in with an existing strategy, if they are you can simply associate the new strategy with them (eg. they have put in their username/password, but then try to authenticate again through twitter)
     passReqToCallback: true,
 },
-  // the second parameter to the constructor function is known as the verify callback. Since we have set passReqToCallback as true, the first parameter is the request object. The second parameter is the username which comes from user entered data in a form, the third second parameter is the plain text password which comes from user entered data in a form. The fourth parameter is a callback function that will be invoked depending on the result of the verify callback.
   function verifyCallback(req, username, password, done) {
-    // find a user in the database based on their username
     db.User.findOne({ username: username }, function (err, user) {
-      // if there is an error with the DB connection (NOT related to finding the user successfully or not, return the callback with the error)
       if (err) return done(err);
-      // if the user is not found in the database or if the password is not valid, do not return an error (set the first parameter to the done callback as null), but do set the second parameter to be false so that the failureRedirect will be reached.
-
-      // validPassword is a method WE have to create for every object created from our Mongoose model (we call these instance methods or "methods" in Mongoose)
       if (!user) {
         return done(null, false);
       }
@@ -33,11 +24,32 @@ passport.use(new LocalStrategy(
             return done(null, false);
         }
       })
-      // if the user has put in the correct username and password, move onto the next step and serialize! Pass into the serialization function as the first parameter the user who was successfull found (we will need it's id to store in the session and cookie)
-
     });
   }
 ));
+
+passport.use( new SpotifyStrategy({
+  clientID: process.env.SPOTIFY_APP_ID,
+  clientSecret: process.env.SPOTIFY_APP_SECRET, 
+  callbackURL: process.env.CALLBACK_URL || "http://localhost:8000/users/auth/spotify/callback",
+  passReqToCallback: true,
+  },
+  function(req, accessToken, refreshToken, expires_in, profile, done){
+    db.User.findByIdAndUpdate(req.user.id, { $set: { spotify_id: profile.id }}, function(err, user){
+      return done(err, user);
+    });
+  }
+));
+
+passport.authenticate('local', { 
+  failureFlash: 'Invalid username or password.',
+  successFlash: 'Logged In!' 
+});
+
+passport.authenticate('spotify', { 
+  failureFlash: 'Unable to connect to spotify',
+  successFlash: 'Connected to Spotify!' 
+});
 
 // this code is ONLY run if the verify callback returns the done callback with no errors and a truthy value as the second parameter. This code only runs once per session and runs a callback function which we can assume will not have any errors (null as the first parameter) and the data we want to put in the session (only the user.id). The successCallback is run next!
 passport.serializeUser(function(user, done) {
@@ -84,6 +96,18 @@ router.get('/logout', function(req,res, next){
     req.flash('message', 'logged out!')
     res.redirect('/users/login')
 })
+
+router
+  .route('/auth/spotify')
+  .get(passport.authenticate('spotify'),(req, res, next) => {
+  });
+
+router
+  .route('/auth/spotify/callback')
+  .get(passport.authenticate('spotify', { failureRedirect: '/users/:user_id' }), 
+    (req, res, next) => {
+      res.redirect('/users/:user_id');
+    })
 
 router.get('/:user_id', function(req, res, next){
   return res.render('showUser', { user: req.user });

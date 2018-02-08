@@ -9,6 +9,6 @@ mongoose
     console.log(`Error: ${err}`);
   });
   
-mongoose.Promise = Promise
+mongoose.Promise = global.Promise
 
 module.exports.User = require("./user")

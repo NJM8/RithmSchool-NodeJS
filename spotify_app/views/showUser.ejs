@@ -9,10 +9,10 @@
     <h3><%= message %></h3>
   <% } %>
   <h2>Welcome <%= user.username %></h2>
-  <form action="get spotified">
+  <form action="/users/auth/spotify">
     <input type="submit" value="Log in to Spotify">
   </form>
-  <% if (user.spotifyAuthenticated) { %>
+  <% if (user.spotify_id) { %>
     <% include ./partials/search %>
   <% } %>
   <form action="/users/logout">

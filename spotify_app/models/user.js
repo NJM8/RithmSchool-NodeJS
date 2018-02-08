@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const findOrCreate = require('mongoose-findorcreate');
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
@@ -10,9 +11,8 @@ const userSchema = new mongoose.Schema({
         // identify a user when we discuss logging in
         unique: true
     },
-    spotifyAuthenticated: {
-        type: Boolean, 
-        default: false
+    spotify_id: {
+        type: String, 
     },
     password: {
         type: String,
@@ -49,5 +49,7 @@ userSchema.methods.comparePassword = function(candidatePassword, next) {
         next(null, isMatch);
     });
 };
+
+userSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model('User', userSchema);
