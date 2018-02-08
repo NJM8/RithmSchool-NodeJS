@@ -5,6 +5,7 @@ const authMiddleware = require("../middleware/auth")
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy;
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const request = require('request');
 
 passport.use(new LocalStrategy({
     usernameField: 'username',
@@ -35,6 +36,7 @@ passport.use( new SpotifyStrategy({
   passReqToCallback: true,
   },
   function(req, accessToken, refreshToken, expires_in, profile, done){
+    req.session.accessToken= accessToken;
     db.User.findByIdAndUpdate(req.user.id, { $set: { spotify_id: profile.id }}, function(err, user){
       return done(err, user);
     });
@@ -108,6 +110,35 @@ router
     (req, res, next) => {
       res.redirect('/users/:user_id');
     })
+
+router
+  .route('/spotify/searchArtist')
+  .post((req, res, next) => {
+    let searchQuery = req.body.searchQuery.replace(/\s/g, '+');
+    let options = {
+      url: `https://api.spotify.com/v1/search?q=${searchQuery}&type=artist&limit=10`, 
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json', 
+        'Authorization': `Bearer ${req.session.accessToken}`
+      }
+    }
+    request(options, function(error, response, body){
+      if (error) {
+        return next(error);
+      } else if (!error && response.statusCode === 200) {
+        let artists = JSON.parse(body).artists.items;
+        return res.render('showArtist', { user: req.user, artists });
+      } else if (response.statusCode === 401) {
+        req.flash('message', 'Please log in to Spotify again to regain access');
+        res.redirect('/users/:user_id');
+      } else {     
+        return next(response.statusCode);
+      }
+    }).on('error', error => {
+      console.log(error);
+    });
+  })
 
 router.get('/:user_id', function(req, res, next){
   return res.render('showUser', { user: req.user });

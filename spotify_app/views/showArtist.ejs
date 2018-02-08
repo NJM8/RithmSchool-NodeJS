@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <title>Spotify Search App</title>
+</head>
+<body>
+  <% if (message) { %>
+    <h3><%= message %></h3>
+  <% } %>
+  <h3>Artists</h3>
+  <p>These are the artists we found. Click on the link to go to their spotify page</p>
+  <% artists.forEach(artist => { %>
+    <h4><%= artist.name %></h4>
+    <% if (artist.images.length > 0) { %>
+      <img src="<%= artist.images[2].url %>">
+    <% } %>
+    <br>
+    <a href="<%= artist.href %>">Check out this artist on Spotify</a>
+  <% }); %>
+  <form action="/users/:user_id">
+    <input type="submit" value="Go back to your page">
+  </form>
+  </form>
+</body>
+</html>
