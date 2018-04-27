@@ -25,6 +25,7 @@
     "passport-local": "^1.0.0",
     "passport-spotify": "^1.0.0",
     "request": "^2.83.0",
-    "spotify-web-api-js": "^0.23.0"
+    "spotify-web-api-js": "^0.23.0",
+    "update": "^0.7.4"
   }
 }
